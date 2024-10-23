@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { useSession, signIn, signOut } from "next-auth/react"
+import { UserPopover } from '@/components/user/UserPopover'
 
 const navigationLinks = [
   { name: 'Home', href: '/' },
@@ -61,30 +62,8 @@ export default function Navigation() {
   const UserInfo = () => {
     if (!session?.user) return null;
     
-    return (
-      <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-zinc-800/50">
-        {session.user.image ? (
-          <img 
-            src={session.user.image} 
-            alt={session.user.name || 'User'} 
-            className="w-8 h-8 rounded-full"
-          />
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center">
-            <User className="w-4 h-4 text-zinc-400" />
-          </div>
-        )}
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-white">
-            {session.user.name}
-          </span>
-          <span className="text-xs text-zinc-400">
-            {session.user.email}
-          </span>
-        </div>
-      </div>
-    )
-  }
+    return <UserPopover sessionUser={session.user} />;
+  };
 
   return (
     <nav className="px-6 py-4 border-b border-zinc-800 sticky top-0 bg-black/95 backdrop-blur-sm z-50">
