@@ -19,7 +19,7 @@ export default function Features() {
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-green-500 to-green-300 text-transparent bg-clip-text">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 glow-text">
             Features & Capabilities
           </h1>
           <p className="text-xl text-zinc-400">

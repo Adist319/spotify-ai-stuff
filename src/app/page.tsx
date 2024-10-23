@@ -22,7 +22,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-green-500 to-green-300 text-transparent bg-clip-text">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 glow-text">
             Your AI-Powered Music Companion
           </h1>
           <p className="text-xl text-zinc-400 mb-8">
