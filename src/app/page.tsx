@@ -1,11 +1,22 @@
+'use client';
+
 import React from 'react';
-import { Music, Sparkles, MessageCircle, Brain, Menu, X } from 'lucide-react';
+import { Sparkles, MessageCircle, Brain, ArrowRight, Heart } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import Navigation from '@/components/Navigation';
+import { useSession } from 'next-auth/react';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Navigation */}
       <Navigation />
 
       {/* Hero Section */}
@@ -17,9 +28,13 @@ export default function Home() {
           <p className="text-xl text-zinc-400 mb-8">
             Experience music like never before with personalized recommendations powered by artificial intelligence.
           </p>
-          <button className="bg-green-500 hover:bg-green-400 text-black font-bold py-3 px-8 rounded-full text-lg">
-            Get Started
-          </button>
+          <Button
+            onClick={() => handleNavigation(session ? '/discover' : '/features')}
+            className="bg-green-500 hover:bg-green-400 text-black font-bold py-6 px-8 rounded-full text-lg inline-flex items-center gap-2"
+          >
+            {session ? 'Discover Music' : 'Explore Features'}
+            <ArrowRight className="h-5 w-5" />
+          </Button>
         </div>
       </section>
 
@@ -28,32 +43,43 @@ export default function Home() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <FeatureCard 
             icon={<Sparkles className="h-8 w-8 text-green-500" />}
-            title="AI-Powered Recommendations"
-            description="Get intelligent music suggestions based on your listening habits and preferences."
+            title="Smart Playlists"
+            description="Create AI-curated playlists based on your mood, activity, or musical taste."
           />
           <FeatureCard 
             icon={<MessageCircle className="h-8 w-8 text-green-500" />}
-            title="Interactive Chat"
-            description="Discover new music through natural conversations with our AI assistant."
+            title="Music Chat"
+            description="Ask questions about songs, artists, and get personalized music recommendations."
           />
           <FeatureCard 
             icon={<Brain className="h-8 w-8 text-green-500" />}
-            title="Emotion Analysis"
-            description="Receive song recommendations that match your current mood and emotional state."
+            title="Mood Analysis"
+            description="Discover music that matches your current mood using our emotional intelligence engine."
           />
         </div>
       </section>
 
       {/* Call to Action */}
       <section className="container mx-auto px-6 py-20">
-        <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-2xl p-12 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Music Experience?</h2>
-          <p className="text-zinc-400 mb-8 text-lg">
-            Join MySpotifyAI today and discover music that speaks to your soul.
-          </p>
-          <button className="bg-green-500 hover:bg-green-400 text-black font-bold py-3 px-8 rounded-full text-lg">
-            Connect with Spotify
-          </button>
+        <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-2xl p-12">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="inline-block p-3 bg-green-500/10 rounded-full mb-6">
+              <Heart className="h-8 w-8 text-green-500" />
+            </div>
+            <h2 className="text-4xl font-bold mb-6">Start Your Musical Journey</h2>
+            <p className="text-zinc-400 mb-8 text-lg">
+              {session 
+                ? "Ready to explore new music? Head to your personalized discovery page."
+                : "Join MySpotifyAI today and let AI help you discover music that speaks to your soul."}
+            </p>
+            <Button
+              onClick={() => handleNavigation(session ? '/discover' : '/features')}
+              className="bg-zinc-800 hover:bg-zinc-700 text-white py-6 px-8 rounded-full text-lg inline-flex items-center gap-2"
+            >
+              {session ? 'Go to Discovery' : 'Learn More'}
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </section>
     </div>

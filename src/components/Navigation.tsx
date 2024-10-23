@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Music, Menu, X } from 'lucide-react'
+import { Music, Menu, X, User } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { useSession, signIn, signOut } from "next-auth/react"
 
@@ -10,13 +11,12 @@ const navigationLinks = [
   { name: 'Home', href: '/' },
   { name: 'Features', href: '/features' },
   { name: 'About', href: '/about' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Contact', href: '/contact' },
 ] as const
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { data: session, status } = useSession()
+  const pathname = usePathname()
 
   const handleAuth = async () => {
     if (session) {
@@ -31,14 +31,21 @@ export default function Navigation() {
     }
   }
 
+  const isActivePath = (path: string) => {
+    if (path === '/' && pathname !== '/') {
+      return false
+    }
+    return pathname?.startsWith(path)
+  }
+
   // Auth button component to maintain DRY principle
   const AuthButton = () => (
     <Button
       onClick={handleAuth}
       className={
         session 
-          ? "bg-zinc-800 hover:bg-zinc-700 text-white" 
-          : "bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold"
+          ? "bg-zinc-800 hover:bg-zinc-700 text-white shadow-[0_0_15px_rgba(29,185,84,0.5)] hover:shadow-[0_0_20px_rgba(29,185,84,0.7)] transition-all duration-300" 
+          : "bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold shadow-[0_0_15px_rgba(29,185,84,0.3)] hover:shadow-[0_0_20px_rgba(29,185,84,0.5)] transition-all duration-300"
       }
     >
       {status === 'loading' 
@@ -49,6 +56,35 @@ export default function Navigation() {
       }
     </Button>
   )
+
+  // User Info component
+  const UserInfo = () => {
+    if (!session?.user) return null;
+    
+    return (
+      <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-zinc-800/50">
+        {session.user.image ? (
+          <img 
+            src={session.user.image} 
+            alt={session.user.name || 'User'} 
+            className="w-8 h-8 rounded-full"
+          />
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center">
+            <User className="w-4 h-4 text-zinc-400" />
+          </div>
+        )}
+        <div className="flex flex-col">
+          <span className="text-sm font-medium text-white">
+            {session.user.name}
+          </span>
+          <span className="text-xs text-zinc-400">
+            {session.user.email}
+          </span>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <nav className="px-6 py-4 border-b border-zinc-800 sticky top-0 bg-black/95 backdrop-blur-sm z-50">
@@ -64,17 +100,17 @@ export default function Navigation() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-zinc-400 hover:text-white transition-colors"
+              className={`transition-colors relative ${
+                isActivePath(link.href)
+                  ? "text-[#1DB954] after:content-[''] after:absolute after:left-0 after:bottom-[-8px] after:w-full after:h-[2px] after:bg-[#1DB954]"
+                  : "text-zinc-400 hover:text-white"
+              }`}
             >
               {link.name}
             </Link>
           ))}
           <div className="flex items-center gap-4">
-            {session && (
-              <span className="text-zinc-400">
-                {session.user?.name}
-              </span>
-            )}
+            {session && <UserInfo />}
             <AuthButton />
           </div>
         </div>
@@ -101,17 +137,17 @@ export default function Navigation() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-zinc-400 hover:text-white transition-colors"
+                className={`transition-colors ${
+                  isActivePath(link.href)
+                    ? "text-[#1DB954]"
+                    : "text-zinc-400 hover:text-white"
+                }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.name}
               </Link>
             ))}
-            {session && (
-              <span className="text-zinc-400 text-center">
-                {session.user?.name}
-              </span>
-            )}
+            {session && <UserInfo />}
             <AuthButton />
           </div>
         </div>
