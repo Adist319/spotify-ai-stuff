@@ -85,7 +85,7 @@ MySpotifyAI is an intelligent web-based Spotify client that combines modern web 
 1. Clone the repository:
 ```bash
 git clone https://github.com/yourusername/MySpotifyAI.git
-cd MySpotifyAI
+cd spotify-ai-stuff
 ```
 
 2. Install dependencies:
