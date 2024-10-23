@@ -11,7 +11,8 @@ import {
   Radio, 
   ArrowLeft,
   Plus,
-  Wand2
+  Wand2,
+  Clock
 } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
@@ -187,6 +188,14 @@ const DiscoverPage = () => {
                 >
                   <Plus className="h-4 w-4 mr-2 text-green-500" />
                   Custom Playlist
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => router.push('/time-machine')}
+                  className="w-full justify-start bg-zinc-800 border-zinc-700 hover:bg-zinc-700 hover:border-green-500 transition-all duration-300 text-white"
+                >
+                  <Clock className="h-4 w-4 mr-2 text-green-500" />
+                  Time Machine
                 </Button>
               </CardContent>
             </Card>
