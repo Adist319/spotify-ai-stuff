@@ -164,7 +164,7 @@ export default function Home() {
                   <FeatureCard 
                     icon={<Brain className="h-8 w-8 text-green-500" />}
                     title="Music Stats"
-                    description="Explore your music stats"
+                    description="Dive deep into your listening habits with detailed analytics. Discover your top artists, favorite genres, listening patterns, and how your music taste evolves over time."
                     onClick={() => handleNavigation('/stats')}
                     isLoading={navigating === '/stats'}
                     requiresAuth={!session}
@@ -175,7 +175,7 @@ export default function Home() {
                 {!session ? (
                   <p>Login required to access this feature</p>
                 ) : (
-                  <p>Explore your music stats!</p>
+                  <p>Get insights into your music preferences with detailed statistics about your listening history, top artists, genres, and more. Perfect for understanding your unique musical taste!</p>
                 )}
               </TooltipContent>
             </Tooltip>
