@@ -158,6 +158,27 @@ export default function Home() {
                 )}
               </TooltipContent>
             </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <FeatureCard 
+                    icon={<Brain className="h-8 w-8 text-green-500" />}
+                    title="Music Stats"
+                    description="Explore your music stats"
+                    onClick={() => handleNavigation('/stats')}
+                    isLoading={navigating === '/stats'}
+                    requiresAuth={!session}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-[300px]">
+                {!session ? (
+                  <p>Login required to access this feature</p>
+                ) : (
+                  <p>Explore your music stats!</p>
+                )}
+              </TooltipContent>
+            </Tooltip>
           </div>
         </section>
       </TooltipProvider>
