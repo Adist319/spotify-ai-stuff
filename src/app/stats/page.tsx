@@ -6,19 +6,15 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { 
   ArrowLeft, 
-  Clock, 
-  Music2, 
-  Disc, 
-  Globe, 
-  Mic2,
-  PlayCircle
+  Mic2, 
+  ListMusic,
+  Users,
+  Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Navigation from '@/components/Navigation';
 import { TopItemsCard } from '@/components/stats/TopItemsCard';
-import { ListeningActivityCard } from '@/components/stats/ListeningActivityCard';
-import { GenreDistributionCard } from '@/components/stats/GenreDistributionCard';
-import { QuickStatsCard } from '@/components/stats/QuickStatsCard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSpotifyStats } from '@/app/hooks/useSpotifyStats';
 import type { TimeRange } from '@/types/stats';
 
@@ -31,80 +27,37 @@ const timeRanges: TimeRange[] = [
 export default function StatsPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const [selectedTimeRange, setSelectedTimeRange] = useState<string>('medium_term');
+  const [selectedTimeRange, setSelectedTimeRange] = useState<'short_term' | 'medium_term' | 'long_term'>('medium_term');
 
   const {
     topItems,
-    listeningActivity,
-    genreDistribution,
-    quickStats,
+    recentTracks,
+    userProfile,
     isLoading,
     error,
-    refreshData
-  } = useSpotifyStats(selectedTimeRange);
+  } = useSpotifyStats({ timeRange: selectedTimeRange });
 
-  // Handle time range change
-  const handleTimeRangeChange = (range: string) => {
-    setSelectedTimeRange(range);
-  };
-
-  // Handle item clicks
-  const handleItemClick = (item: any) => {
-    if (item.type === 'artist') {
-      router.push(`/artist/${item.id}`);
-    } else if (item.type === 'album') {
-      router.push(`/album/${item.id}`);
-    } else if (item.type === 'track') {
-      router.push(`/track/${item.id}`);
-    }
-  };
-
-  // Handle genre click
-  const handleGenreClick = (genre: any) => {
-    router.push(`/genre/${genre.id}`);
-  };
-
-  // Quick stats configuration
-  const statsConfig = [
+  // Quick stats that we can reliably get from the Spotify API
+  const quickStats = [
     {
-      id: 'listening-time',
+      id: 'following',
+      icon: <Users className="h-4 w-4 text-green-500" />,
+      label: "Following",
+      value: userProfile?.following?.total || 0,
+      subLabel: "Artists"
+    },
+    {
+      id: 'playlists',
+      icon: <ListMusic className="h-4 w-4 text-green-500" />,
+      label: "Playlists",
+      value: userProfile?.totalPlaylists || 0
+    },
+    {
+      id: 'recent',
       icon: <Clock className="h-4 w-4 text-green-500" />,
-      label: "Hours This Week",
-      value: quickStats?.weeklyHours || 0,
-      change: quickStats?.weeklyHoursChange,
-    },
-    {
-      id: 'tracks-played',
-      icon: <Music2 className="h-4 w-4 text-green-500" />,
-      label: "Tracks Played",
-      value: quickStats?.tracksPlayed || 0,
-      change: quickStats?.tracksPlayedChange,
-    },
-    {
-      id: 'unique-artists',
-      icon: <Mic2 className="h-4 w-4 text-green-500" />,
-      label: "Unique Artists",
-      value: quickStats?.uniqueArtists || 0,
-    },
-    {
-      id: 'total-albums',
-      icon: <Disc className="h-4 w-4 text-green-500" />,
-      label: "Albums Played",
-      value: quickStats?.albumsPlayed || 0,
-    },
-    {
-      id: 'countries',
-      icon: <Globe className="h-4 w-4 text-green-500" />,
-      label: "Countries",
-      value: quickStats?.countriesRepresented || 0,
-      subLabel: "Artist origins",
-    },
-    {
-      id: 'playtime',
-      icon: <PlayCircle className="h-4 w-4 text-green-500" />,
-      label: "Total Playtime",
-      value: quickStats?.totalPlaytime || '0h',
-      subLabel: "This month",
+      label: "Recently Played",
+      value: recentTracks?.items?.length || 0,
+      subLabel: "Last 24 hours"
     }
   ];
 
@@ -125,7 +78,7 @@ export default function StatsPage() {
           </Button>
           <div>
             <h1 className="text-4xl font-bold text-white">Your Stats</h1>
-            <p className="text-zinc-400">Discover insights about your listening habits</p>
+            <p className="text-zinc-400">See your top music and listening activity</p>
           </div>
         </div>
 
@@ -134,80 +87,80 @@ export default function StatsPage() {
             {error.message}
           </div>
         ) : (
-          <>
-            {/* Top Items Section */}
-            <div className="mb-8">
-              <TopItemsCard
-                timeRanges={timeRanges}
-                defaultTimeRange={selectedTimeRange}
-                onTimeRangeChange={handleTimeRangeChange}
-                data={topItems}
-                loading={isLoading}
-                onItemClick={handleItemClick}
-              />
+          <div className="space-y-8">
+            {/* Quick Stats */}
+            <div className="grid md:grid-cols-3 gap-4">
+              {quickStats.map((stat) => (
+                <Card key={stat.id} className="bg-zinc-900 border-zinc-800">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4">
+                      {stat.icon}
+                      <div>
+                        <p className="text-sm text-zinc-400">{stat.label}</p>
+                        <p className="text-2xl font-bold text-white">{stat.value}</p>
+                        {stat.subLabel && (
+                          <p className="text-xs text-zinc-500">{stat.subLabel}</p>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Main Content */}
-              <div className="lg:col-span-2 space-y-6">
-                {/* Listening Activity */}
-                <ListeningActivityCard
-                  data={listeningActivity}
-                  loading={isLoading}
-                  xAxisLabel="Day"
-                  yAxisLabel="Hours"
-                />
+            {/* Top Items */}
+            <TopItemsCard
+              timeRanges={timeRanges}
+              defaultTimeRange={selectedTimeRange}
+              onTimeRangeChange={setSelectedTimeRange}
+              data={topItems}
+              loading={isLoading}
+            />
 
-                {/* Genre Distribution */}
-                <GenreDistributionCard
-                  data={genreDistribution}
-                  loading={isLoading}
-                  onGenreClick={handleGenreClick}
-                  showTrackCount
-                />
-              </div>
-
-              {/* Sidebar Stats */}
-              <div className="space-y-6">
-                {/* Quick Stats Upper */}
-                <QuickStatsCard
-                  stats={statsConfig.slice(0, 3)}
-                  loading={isLoading}
-                  columns={1}
-                />
-
-                {/* Quick Stats Lower */}
-                <QuickStatsCard
-                  stats={statsConfig.slice(3)}
-                  title="More Insights"
-                  loading={isLoading}
-                  columns={1}
-                />
-              </div>
-            </div>
-          </>
+            {/* Recent Tracks */}
+            {recentTracks?.items?.length > 0 && (
+              <Card className="bg-zinc-900 border-zinc-800">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-white">
+                    <Clock className="h-5 w-5 text-green-500" />
+                    Recently Played
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {recentTracks.items.slice(0, 5).map((track: any) => (
+                      <div 
+                        key={`${track.track.id}-${track.played_at}`}
+                        className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg"
+                      >
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={track.track.album.images[2]?.url || '/api/placeholder/40/40'}
+                            alt={track.track.name}
+                            className="w-10 h-10 rounded"
+                          />
+                          <div>
+                            <p className="font-medium text-white">{track.track.name}</p>
+                            <p className="text-sm text-zinc-400">
+                              {track.track.artists.map((a: any) => a.name).join(', ')}
+                            </p>
+                          </div>
+                        </div>
+                        <span className="text-sm text-zinc-500">
+                          {new Date(track.played_at).toLocaleTimeString([], { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          })}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         )}
       </div>
     </div>
   );
-}
-
-// hooks/useSpotifyStats.ts
-import useSWR from 'swr';
-import type { TopItemsData, ChartDataPoint, GenreData, QuickStat } from '@/types/stats';
-
-interface SpotifyStatsResponse {
-  topItems: TopItemsData;
-  listeningActivity: ChartDataPoint[];
-  genreDistribution: GenreData[];
-  quickStats: {
-    weeklyHours: number;
-    weeklyHoursChange: { value: number; trend: 'up' | 'down' | 'neutral' };
-    tracksPlayed: number;
-    tracksPlayedChange: { value: number; trend: 'up' | 'down' | 'neutral' };
-    uniqueArtists: number;
-    albumsPlayed: number;
-    countriesRepresented: number;
-    totalPlaytime: string;
-  };
 }
