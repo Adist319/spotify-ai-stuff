@@ -28,7 +28,7 @@ export function TopItemsList({
   loading = false,
   error,
   showRank = true,
-  showPlayCount = true,
+  showPlayCount = false,
   maxItems,
   className,
 }: TopItemsListProps) {
@@ -73,12 +73,6 @@ export function TopItemsList({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {showPlayCount && (
-              <div className="text-right mr-4">
-                <p className="text-white font-medium">{item.plays}</p>
-                <p className="text-xs text-zinc-400">plays</p>
-              </div>
-            )}
             <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
               {onPlayClick && (
                 <Button
