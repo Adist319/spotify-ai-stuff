@@ -27,7 +27,9 @@ export async function POST(req: NextRequest) {
     });
 
     // Extract the text content from the response
-    const content = response.content[0].text;
+    const content = response.content[0].type === 'text' 
+      ? response.content[0].text 
+      : '';
 
     return NextResponse.json({ content });
 
