@@ -18,7 +18,7 @@ export async function GET(req: Request) {
     const timeRange = searchParams.get('timeRange') || 'medium_term';
 
     // Fetch data from Spotify API
-    const [topArtists, topTracks, recentlyPlayed, userProfile, following, playlists] = await Promise.all([
+    const [topArtists, topTracks, recentlyPlayed, userProfile, following, playlists, savedAlbums] = await Promise.all([
       fetch(`https://api.spotify.com/v1/me/top/artists?limit=20&time_range=${timeRange}`, {
         headers: { Authorization: `Bearer ${token.accessToken}` },
       }),
@@ -36,6 +36,9 @@ export async function GET(req: Request) {
       }),
       fetch('https://api.spotify.com/v1/me/playlists', {
         headers: { Authorization: `Bearer ${token.accessToken}` },
+      }),
+      fetch('https://api.spotify.com/v1/me/albums?limit=50', {
+        headers: { Authorization: `Bearer ${token.accessToken}` },
       })
     ]);
 
@@ -50,14 +53,16 @@ export async function GET(req: Request) {
       recentData,
       profileData,
       followingData,
-      playlistsData
+      playlistsData,
+      albumsData
     ] = await Promise.all([
       topArtists.json(),
       topTracks.json(),
       recentlyPlayed.json(),
       userProfile.json(),
       following.json(),
-      playlists.json()
+      playlists.json(),
+      savedAlbums.json()
     ]);
 
     const topItems: TopItemsData = {
@@ -75,7 +80,15 @@ export async function GET(req: Request) {
         artist: track.artists.map((a: any) => a.name).join(', '),
         type: 'track'
       })),
-      albums: [] // Spotify API doesn't provide top albums directly
+      albums: albumsData.items.map((item: any) => ({
+        id: item.album.id,
+        name: item.album.name,
+        image: item.album.images[0]?.url || '/api/placeholder/64/64',
+        artist: item.album.artists.map((a: any) => a.name).join(', '),
+        addedAt: item.added_at,
+        releaseDate: item.album.release_date,
+        type: 'album'
+      }))
     };
 
     return NextResponse.json({

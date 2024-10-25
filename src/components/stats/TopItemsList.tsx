@@ -34,6 +34,13 @@ export function TopItemsList({
 }: TopItemsListProps) {
   const displayItems = maxItems ? items.slice(0, maxItems) : items;
 
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString(undefined, { 
+      year: 'numeric', 
+      month: 'short' 
+    });
+  };
+
   if (loading) {
     return <TopItemsListSkeleton count={maxItems || items.length} showRank={showRank} />;
   }
@@ -50,7 +57,7 @@ export function TopItemsList({
           className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg hover:bg-zinc-800 transition-colors group"
         >
           <div 
-            className="flex items-center gap-4 flex-1 cursor-pointer"
+            className="flex items-center gap-4 flex-1"
             onClick={() => onItemClick?.(item)}
           >
             {showRank && (
@@ -70,6 +77,12 @@ export function TopItemsList({
                   ? item.genres?.join(', ')
                   : item.artist}
               </p>
+              {type === 'album' && item.addedAt && (
+                <p className="text-xs text-zinc-500">
+                  Added {formatDate(item.addedAt)}
+                  {item.releaseDate && ` • Released ${formatDate(item.releaseDate)}`}
+                </p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-2">

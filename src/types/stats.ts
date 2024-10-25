@@ -1,6 +1,7 @@
 // types/stats.ts
 import { LucideIcon } from 'lucide-react';
 
+// src/types/stats.ts
 export interface TopItem {
   id: string;
   name: string;
@@ -8,6 +9,8 @@ export interface TopItem {
   artist?: string;
   genres?: string[];
   type?: 'artist' | 'album' | 'track';
+  addedAt?: string;
+  releaseDate?: string;
 }
 
 export interface TimeRange {
