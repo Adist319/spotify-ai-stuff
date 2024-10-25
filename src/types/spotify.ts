@@ -1,5 +1,4 @@
 // types/spotify.ts
-
 export interface SpotifyUser {
   country: string;
   display_name: string;
@@ -90,4 +89,31 @@ export interface SpotifyPlayHistory {
     type: string;
     uri: string;
   } | null;
+}
+
+// Add to existing spotify.ts
+export interface SpotifyUserData extends SpotifyUser {
+  currentTrack?: {
+    name: string;
+    artist: string;
+    album: string;
+    albumArt: string;
+    isPlaying: boolean;
+  } | null;
+  topArtists?: Array<{
+    id: string;
+    name: string;
+    genres: string[];
+  }>;
+  favoriteGenres?: string[];
+  recentTracks?: Array<{
+    id: string;
+    name: string;
+    artist: string;
+    album?: string;
+    albumArt?: string;
+  }>;
+  totalPlaylists: number;
+  following: number;
+  premium: boolean;
 }

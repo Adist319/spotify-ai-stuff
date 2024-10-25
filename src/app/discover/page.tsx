@@ -18,64 +18,39 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-// Separate AIChatInterface component
-const AIChatInterface = () => {
-  const [inputMessage, setInputMessage] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (!inputMessage.trim()) return;
-    
-    console.log('Submitted message:', inputMessage);
-    setInputMessage('');
-  };
-
-  // Auto-focus input when component mounts
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  return (
-    <div className="flex flex-col h-[600px] bg-zinc-900 rounded-lg border border-zinc-800">
-      <div className="flex-1 p-4 overflow-y-auto">
-        <div className="text-zinc-400 text-center mt-8">
-          <Sparkles className="h-8 w-8 mx-auto mb-4 text-green-500" />
-          <p className="text-lg mb-2">Start a conversation about music!</p>
-          <p className="text-sm">Try:</p>
-          <p className="text-sm italic">"Find me something like Radiohead but more electronic"</p>
-          <p className="text-sm italic">"I'm feeling energetic, what should I listen to?"</p>
-          <p className="text-sm italic">"Create a playlist for a dinner party"</p>
-        </div>
-      </div>
-      
-      <div className="p-4 border-t border-zinc-800">
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Ask anything about music..."
-            className="flex-1 bg-zinc-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          <Button 
-            type="submit"
-            className="bg-green-500 hover:bg-green-400 text-black font-medium transition-all duration-300 shadow-[0_0_15px_rgba(29,185,84,0.3)] hover:shadow-[0_0_20px_rgba(29,185,84,0.5)]"
-          >
-            <MessageCircle className="h-5 w-5" />
-          </Button>
-        </form>
-      </div>
-    </div>
-  );
-};
+import { AIChatInterface } from '@/components/AIChatInterface';
 
 const DiscoverPage = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('chat');
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/');
+    }
+  }, [status, router]);
+
+  // Show loading state
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <Navigation />
+        <div className="container mx-auto px-6 py-8">
+          <div className="animate-pulse">
+            <div className="h-8 w-48 bg-zinc-800 rounded mb-4"></div>
+            <div className="h-4 w-64 bg-zinc-800 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show auth error
+  if (!session) {
+    return null; // Will redirect in useEffect
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
