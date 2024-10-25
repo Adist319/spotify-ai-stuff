@@ -12,7 +12,7 @@ interface TopItemsCardProps {
   title?: string;
   timeRanges?: TimeRange[];
   defaultTimeRange?: string;
-  onTimeRangeChange?: (range: string) => void;
+  onTimeRangeChange?: (range: 'short_term' | 'medium_term' | 'long_term') => void;
   data?: TopItemsData;
   loading?: boolean;
   error?: string;
@@ -37,7 +37,7 @@ export function TopItemsCard({
 }: TopItemsCardProps) {
   const [timeRange, setTimeRange] = useState(defaultTimeRange);
 
-  const handleTimeRangeChange = (range: string) => {
+  const handleTimeRangeChange = (range: 'short_term' | 'medium_term' | 'long_term') => {
     setTimeRange(range);
     onTimeRangeChange?.(range);
   };

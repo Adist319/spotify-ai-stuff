@@ -1,11 +1,11 @@
 // app/api/stats/route.ts
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import type { TopItem, TopItemsData, StatsError } from '@/types/stats';
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
-    const token = await getToken({ req });
+    const token = await getToken({ req: req as any });
     
     if (!token) {
       return NextResponse.json(
@@ -37,13 +37,13 @@ export async function GET(req: Request) {
       fetch('https://api.spotify.com/v1/me/playlists', {
         headers: { Authorization: `Bearer ${token.accessToken}` },
       }),
-      fetch('https://api.spotify.com/v1/me/albums?limit=50', {
+      fetch('https://api.spotify.com/v1/me/albums?limit=20', {
         headers: { Authorization: `Bearer ${token.accessToken}` },
       })
     ]);
 
     if (!topArtists.ok || !topTracks.ok || !recentlyPlayed.ok || 
-        !userProfile.ok || !following.ok || !playlists.ok) {
+        !userProfile.ok || !following.ok || !playlists.ok || !savedAlbums.ok) {
       throw new Error('Failed to fetch data from Spotify');
     }
 
@@ -65,6 +65,14 @@ export async function GET(req: Request) {
       savedAlbums.json()
     ]);
 
+    // Calculate today's listening time from recently played tracks
+    const today = new Date().setHours(0, 0, 0, 0);
+    const todayTracks = recentData.items.filter((item: any) => 
+      new Date(item.played_at).setHours(0, 0, 0, 0) === today
+    );
+    const todayListeningTime = todayTracks.reduce((acc: number, item: any) => 
+      acc + (item.track.duration_ms / 1000 / 60), 0); // Convert to minutes
+
     const topItems: TopItemsData = {
       artists: artistsData.items.map((artist: any) => ({
         id: artist.id,
@@ -85,9 +93,8 @@ export async function GET(req: Request) {
         name: item.album.name,
         image: item.album.images[0]?.url || '/api/placeholder/64/64',
         artist: item.album.artists.map((a: any) => a.name).join(', '),
-        addedAt: item.added_at,
-        releaseDate: item.album.release_date,
-        type: 'album'
+        type: 'album',
+        addedAt: item.added_at // This is unique to saved albums - we can show when they saved it
       }))
     };
 
@@ -112,7 +119,9 @@ export async function GET(req: Request) {
         following: {
           total: followingData.artists.total
         },
-        totalPlaylists: playlistsData.total
+        totalPlaylists: playlistsData.total,
+        savedAlbums: albumsData.total,
+        todayListeningTime // Add this new field
       }
     });
 

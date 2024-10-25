@@ -17,6 +17,7 @@ import { TopItemsCard } from '@/components/stats/TopItemsCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSpotifyStats } from '@/app/hooks/useSpotifyStats';
 import type { TimeRange } from '@/types/stats';
+import { formatListeningTime } from '@/lib/utils';
 
 const timeRanges: TimeRange[] = [
   { value: 'short_term', label: '4 Weeks' },
@@ -53,11 +54,13 @@ export default function StatsPage() {
       value: userProfile?.totalPlaylists || 0
     },
     {
-      id: 'recent',
+      id: 'listeningTime',
       icon: <Clock className="h-4 w-4 text-green-500" />,
-      label: "Recently Played",
-      value: recentTracks?.items?.length || 0,
-      subLabel: "Last 24 hours"
+      label: "Listening Time",
+      value: userProfile?.todayListeningTime 
+        ? formatListeningTime(userProfile.todayListeningTime)
+        : '0m',
+      subLabel: "Today"
     }
   ];
 
@@ -118,7 +121,7 @@ export default function StatsPage() {
             />
 
             {/* Recent Tracks */}
-            {recentTracks?.items?.length > 0 && (
+            {recentTracks?.items && recentTracks.items.length > 0 && (
               <Card className="bg-zinc-900 border-zinc-800">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-white">

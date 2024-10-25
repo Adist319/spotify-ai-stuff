@@ -24,6 +24,10 @@ export interface QuickStat {
   label: string;
   value: string | number;
   subLabel?: string;
+  change?: {
+    value: number;
+    trend: 'up' | 'down' | 'neutral';
+  };
 }
 
 export type TopItemType = 'artist' | 'album' | 'track';
@@ -70,6 +74,7 @@ export interface UserProfile {
     total: number;
   };
   totalPlaylists?: number;
+  todayListeningTime?: number; // in minutes
 }
 
 // Hook Types
@@ -93,3 +98,10 @@ export const TIME_RANGES = {
   MEDIUM_TERM: 'medium_term',
   LONG_TERM: 'long_term',
 } as const;
+
+// Add to existing interfaces
+export interface ListeningStats {
+  totalMinutes: number;
+  previousTotalMinutes?: number; // For comparison
+  percentageChange?: number;
+}
