@@ -18,7 +18,7 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AIChatInterface } from '@/components/AIChatInterface';
+import { AIChatInterface } from '@/components/chat/AIChatInterface';
 
 const DiscoverPage = () => {
   const { data: session, status } = useSession();

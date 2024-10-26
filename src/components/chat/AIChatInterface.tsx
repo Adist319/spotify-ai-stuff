@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { ChatMessage } from '@/types/chat';
 import { cn } from '@/lib/utils';
+import { AIChatTypingIndicator } from './AIChatTypingIndicator';
 
 export function AIChatInterface() {
   const [inputMessage, setInputMessage] = useState('');
@@ -89,9 +90,10 @@ export function AIChatInterface() {
                 <p className="text-white whitespace-pre-wrap">{message.content}</p>
               </div>
             ))}
+            {isLoading && <AIChatTypingIndicator />}
+            <div ref={messagesEndRef} />
           </>
         )}
-        <div ref={messagesEndRef} />
       </div>
       
       <div className="p-4 border-t border-zinc-800">
