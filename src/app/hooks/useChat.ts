@@ -3,7 +3,8 @@ import { useState, useCallback, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { nanoid } from 'nanoid';
 import { anthropic, CLAUDE_MODEL } from '@/lib/claude';
-import type { ChatMessage, ChatState } from '@/types/chat';
+import type { AIRecommendation, ChatMessage, ChatState } from '@/types/chat';
+import { parseClaudeRecommendations } from '@/lib/aiRecommendations';
 
 export function useChat() {
   const { data: session } = useSession();
@@ -56,12 +57,19 @@ export function useChat() {
         throw new Error('Invalid response format');
       }
 
+      // Extract conversational part by removing JSON section
+      const conversationalContent = data.content.replace(/---JSON---[\s\S]*?---JSON---/g, '').trim();
+
       const assistantMessage: ChatMessage = {
         id: nanoid(),
         role: 'assistant',
-        content: data.content,
+        content: conversationalContent,
         timestamp: Date.now()
       };
+
+      // Parse recommendations for verification purposes only
+      const recommendations = parseClaudeRecommendations(data.content);
+      console.log('Parsed recommendations:', recommendations); // For debugging
 
       setState(prev => ({
         messages: [...prev.messages, assistantMessage],

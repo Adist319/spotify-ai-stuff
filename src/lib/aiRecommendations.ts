@@ -1,4 +1,5 @@
 import type { SpotifyTrack } from '@/types/spotify';
+import { nanoid } from 'nanoid';
 
 export interface AIRecommendation {
   id: string;
@@ -11,29 +12,31 @@ export interface AIRecommendation {
 
 // Parse Claude's response to extract track recommendations
 export function parseClaudeRecommendations(content: string): Partial<AIRecommendation>[] {
-  // This is a basic implementation - you might want to make it more sophisticated
-  const recommendations: Partial<AIRecommendation>[] = [];
-  
-  // Look for patterns like "I recommend [song] by [artist]" or similar
-  const matches = content.match(/(?:recommend|suggest|try)\s+"([^"]+)"\s+by\s+([^,\n.]+)/g);
-  
-  if (matches) {
-    matches.forEach(match => {
-      const [_, title, artist] = match.match(/(?:recommend|suggest|try)\s+"([^"]+)"\s+by\s+([^,\n.]+)/) || [];
-      if (title && artist) {
-        recommendations.push({
-          track: {
-            name: title.trim(),
-            artists: [{ name: artist.trim() }]
-          } as SpotifyTrack,
-          reason: match,
-          timestamp: Date.now()
-        });
-      }
-    });
-  }
+  try {
+    // Extract JSON section between markers
+    const jsonMatch = content.match(/---JSON---\n([\s\S]*?)\n---JSON---/);
+    
+    if (!jsonMatch?.[1]) {
+      return [];
+    }
 
-  return recommendations;
+    const jsonData = JSON.parse(jsonMatch[1]);
+    
+    return jsonData.recommendations.map((rec: any) => ({
+      id: nanoid(),
+      track: {
+        name: rec.track.name,
+        artists: [{ name: rec.track.artist }]
+      } as SpotifyTrack,
+      reason: rec.track.reason,
+      mood: rec.mood,
+      context: rec.context,
+      timestamp: Date.now()
+    }));
+  } catch (error) {
+    console.error('Failed to parse recommendations:', error);
+    return [];
+  }
 }
 
 // Store recommendations in localStorage
