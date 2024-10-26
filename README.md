@@ -57,16 +57,20 @@ MySpotifyAI is an intelligent web-based Spotify client that combines modern web 
 ## 🛠️ Technical Stack
 
 - **Frontend**
-  - Next.js
-  - React
+  - Next.js 14
+  - Shadcn UI
+  - React 18
   - TailwindCSS
   - TypeScript
+  - SWR for data fetching
+  - Radix UI components
+  - Recharts for data visualization
 
 - **Backend**
   - Node.js
   - NextAuth.js
   - Spotify Web API
-  - OpenAI API/Google Gemini API
+  - Anthropic API
 
 - **Authentication**
   - OAuth 2.0
@@ -77,14 +81,14 @@ MySpotifyAI is an intelligent web-based Spotify client that combines modern web 
 
 - Node.js (v18 or higher)
 - Spotify Developer Account
-- OpenAI API key or Google Gemini API key (still deciding which to use)
+- Anthropic API key
 - Modern web browser with JavaScript enabled
 
 ## 🚀 Getting Started
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/MySpotifyAI.git
+git clone https://github.com/yourusername/spotify-ai-stuff.git
 cd spotify-ai-stuff
 ```
 
@@ -103,7 +107,8 @@ cp .env.example .env.local
 SPOTIFY_CLIENT_ID=your_spotify_client_id
 SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 NEXTAUTH_SECRET=your_nextauth_secret
-OPENAI_API_KEY=your_openai_api_key
+ANTHROPIC_API_KEY=your_anthropic_api_key
+NEXTAUTH_URL=http://localhost:3000
 ```
 
 5. Run the development server:
@@ -121,7 +126,6 @@ npm run dev
 3. Add `http://localhost:3000/api/auth/callback/spotify` to Redirect URIs
 4. Copy Client ID and Client Secret to your `.env.local` file
 
-### OpenAI/Google Gemini Setup
-1. Obtain API key from chosen provider
+### Anthropic Claude Setup
+1. Obtain API key from [Anthropic](https://anthropic.com)
 2. Add key to `.env.local` file
-3. Configure API parameters in `config/ai.ts`
