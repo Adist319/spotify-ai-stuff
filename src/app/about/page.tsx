@@ -2,6 +2,18 @@ import React from 'react';
 import Navigation from '@/components/Navigation';
 import { Music, Code, Cpu, Server, Sparkles, Split } from 'lucide-react';
 
+interface TechCardProps {
+  icon: React.ReactNode;
+  title: string;
+  technologies: string[];
+}
+
+interface FeatureRowProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
 export default function About() {
   return (
     <div className="min-h-screen bg-black text-white">
@@ -104,7 +116,7 @@ export default function About() {
 }
 
 // Tech Stack Card Component
-const TechCard = ({ icon, title, technologies }) => (
+const TechCard = ({ icon, title, technologies }: TechCardProps) => (
   <div className="bg-zinc-900 p-6 rounded-xl border border-zinc-800 hover:border-green-500 transition-colors">
     <div className="mb-4">
       {icon}
@@ -122,7 +134,7 @@ const TechCard = ({ icon, title, technologies }) => (
 );
 
 // Feature Row Component
-const FeatureRow = ({ icon, title, description }) => (
+const FeatureRow = ({ icon, title, description }: FeatureRowProps) => (
   <div className="flex items-start gap-4 p-6 bg-zinc-900/50 rounded-xl">
     <div className="p-2 bg-zinc-800 rounded-lg">
       {icon}
