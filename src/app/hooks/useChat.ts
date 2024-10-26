@@ -58,7 +58,9 @@ export function useChat() {
       }
 
       // Extract conversational part by removing JSON section
-      const conversationalContent = data.content.replace(/---JSON---[\s\S]*?---JSON---/g, '').trim();
+      const conversationalContent = data.content
+        .split(/---JSON---[\s\S]*?---JSON---/)[0]
+        .trim();
 
       const assistantMessage: ChatMessage = {
         id: nanoid(),

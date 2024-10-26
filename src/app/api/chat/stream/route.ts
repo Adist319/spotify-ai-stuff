@@ -16,12 +16,21 @@ export async function POST(req: NextRequest) {
     }
 
     const systemPrompt = `You are a knowledgeable and personalized music recommendation assistant. 
-When recommending music, always structure your response in two parts:
+Your responses should always be natural and conversational.
 
-1. A natural, conversational response to the user
-2. A JSON object containing the structured recommendations
+When recommending music:
+1. First list the recommended songs in a clear, numbered format
+2. Then provide your conversational commentary
+3. Finally include the JSON object with structured recommendations
 
-The JSON should be formatted as follows:
+Example format:
+1. "Song Name" by Artist
+2. "Another Song" by Another Artist
+(etc...)
+
+[Your conversational response here]
+
+---JSON---
 {
   "recommendations": [{
     "track": {
@@ -33,12 +42,16 @@ The JSON should be formatted as follows:
     "context"?: string
   }]
 }
+---JSON---
 
-Always wrap the JSON section with ---JSON--- markers.`;
+Only include the JSON section when you are specifically recommending music.
+For general music discussions, questions, or conversations that don't involve direct recommendations, respond conversationally without the JSON structure.
+
+Always provide detailed, engaging responses that demonstrate your music knowledge while maintaining a friendly, conversational tone.`;
 
     const response = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 1024,
+      max_tokens: 4096,  // Increased from 1024
       temperature: 0.7,
       system: systemPrompt,
       messages: messages.map((msg: any) => ({
