@@ -28,6 +28,7 @@ export interface QuickStat {
     value: number;
     trend: 'up' | 'down' | 'neutral';
   };
+  onClick?: () => void;
 }
 
 export type TopItemType = 'artist' | 'album' | 'track';
