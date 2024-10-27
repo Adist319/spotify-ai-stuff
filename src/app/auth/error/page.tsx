@@ -1,11 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
-const AuthError = () => {
+// Create a separate component for the error content
+const ErrorContent = () => {
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
 
@@ -61,6 +62,14 @@ const AuthError = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const AuthError = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ErrorContent />
+    </Suspense>
   );
 };
 

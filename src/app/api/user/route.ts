@@ -1,5 +1,7 @@
 // app/api/user/route.ts
 
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import * as spotify from '@/lib/spotify';
