@@ -135,8 +135,16 @@ export default function Features() {
   );
 }
 
-// Feature Card Component
-const FeatureCard = ({ icon, title, description, benefits }) => (
+// Add this interface above the FeatureCard component
+interface FeatureCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  benefits: string[];
+}
+
+// Update the FeatureCard component with the interface
+const FeatureCard = ({ icon, title, description, benefits }: FeatureCardProps) => (
   <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 hover:border-green-500 transition-colors">
     <div className="mb-4">
       {icon}
@@ -154,8 +162,16 @@ const FeatureCard = ({ icon, title, description, benefits }) => (
   </div>
 );
 
-// Advanced Feature Component
-const AdvancedFeature = ({ icon, title, description, reasoning }) => (
+// Add interface
+interface AdvancedFeatureProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  reasoning: string;
+}
+
+// Update component signature
+const AdvancedFeature = ({ icon, title, description, reasoning }: AdvancedFeatureProps) => (
   <div className="flex gap-6 p-6 bg-zinc-900 rounded-xl">
     <div className="p-2 bg-zinc-800 rounded-lg h-fit">
       {icon}
@@ -169,7 +185,13 @@ const AdvancedFeature = ({ icon, title, description, reasoning }) => (
 );
 
 // Benefit Card Component
-const BenefitCard = ({ icon, title, description }) => (
+interface BenefitCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+const BenefitCard = ({ icon, title, description }: BenefitCardProps) => (
   <div className="text-center">
     <div className="mx-auto w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mb-4">
       {icon}
