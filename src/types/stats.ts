@@ -105,3 +105,11 @@ export interface ListeningStats {
   previousTotalMinutes?: number; // For comparison
   percentageChange?: number;
 }
+
+export interface GenreData {
+  id: string;
+  name: string;
+  value: number;
+  numberOfTracks?: number;
+  color?: string;
+}
