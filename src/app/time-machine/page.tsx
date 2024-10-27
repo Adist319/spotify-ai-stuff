@@ -18,6 +18,7 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import Image from 'next/image';
 
 // Sample data - would be replaced with real Spotify data
 const sampleListeningData = [
@@ -146,10 +147,12 @@ const MusicTimeMachine = () => {
                       className="flex items-center justify-between p-3 rounded-lg bg-zinc-800/50 hover:bg-zinc-800 transition-colors group"
                     >
                       <div className="flex items-center gap-4">
-                        <img
+                        <Image
                           src={track.image}
                           alt={`${track.title} album art`}
-                          className="w-10 h-10 rounded"
+                          width={40}
+                          height={40}
+                          className="rounded"
                         />
                         <div>
                           <p className="font-medium text-white">{track.title}</p>

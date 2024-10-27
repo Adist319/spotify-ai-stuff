@@ -67,9 +67,9 @@ export function AIChatInterface() {
             <MessageCircle className="h-8 w-8 mx-auto mb-4 text-green-500" />
             <p className="text-lg mb-2">Start a conversation about music!</p>
             <p className="text-sm">Try:</p>
-            <p className="text-sm italic">"Find me something like Radiohead but more electronic"</p>
-            <p className="text-sm italic">"I'm feeling energetic, what should I listen to?"</p>
-            <p className="text-sm italic">"Create a playlist for a dinner party"</p>
+            <p className="text-sm italic">&quot;Find me something like Radiohead but more electronic&quot;</p>
+            <p className="text-sm italic">&quot;I&apos;m feeling energetic, what should I listen to?&quot;</p>
+            <p className="text-sm italic">&quot;Create a playlist for a dinner party&quot;</p>
           </div>
         ) : (
           <>

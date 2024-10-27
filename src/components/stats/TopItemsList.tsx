@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { TopItem, TopItemType } from '@/types/stats';
 import { TopItemsListSkeleton } from './loading';
+import Image from 'next/image';
 
 interface TopItemsListProps {
   items: TopItem[];
@@ -65,10 +66,12 @@ export function TopItemsList({
                 {index + 1}
               </span>
             )}
-            <img
+            <Image
               src={item.image}
               alt={item.name}
-              className={`w-12 h-12 ${type === 'artist' ? 'rounded-full' : 'rounded'}`}
+              width={48}
+              height={48}
+              className={`${type === 'artist' ? 'rounded-full' : 'rounded'}`}
             />
             <div>
               <p className="font-medium text-white">{item.name}</p>

@@ -118,7 +118,7 @@ const DiscoverPage = () => {
                   <CardHeader>
                     <CardTitle className="text-white">Discovery History</CardTitle>
                     <CardDescription className="text-zinc-400">
-                      Songs and playlists you've discovered through AI
+                      Songs and playlists you&apos;ve discovered through AI
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -182,7 +182,7 @@ const DiscoverPage = () => {
                   <History className="h-5 w-5 text-green-500" />
                   Recent Discoveries
                 </CardTitle>
-                <CardDescription className="text-zinc-400">Songs you've recently found</CardDescription>
+                <CardDescription className="text-zinc-400">Songs you&apos;ve recently found</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="text-zinc-400 text-center py-8">

@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSpotifyStats } from '@/app/hooks/useSpotifyStats';
 import type { TimeRange } from '@/types/stats';
 import { formatListeningTime } from '@/lib/utils';
+import Image from 'next/image';
 
 const timeRanges: TimeRange[] = [
   { value: 'short_term', label: '4 Weeks' },
@@ -137,10 +138,12 @@ export default function StatsPage() {
                         className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg"
                       >
                         <div className="flex items-center gap-4">
-                          <img
+                          <Image
                             src={track.track.album.images[2]?.url || '/api/placeholder/40/40'}
                             alt={track.track.name}
-                            className="w-10 h-10 rounded"
+                            width={40}
+                            height={40}
+                            className="rounded"
                           />
                           <div>
                             <p className="font-medium text-white">{track.track.name}</p>
