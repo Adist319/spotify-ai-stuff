@@ -48,7 +48,10 @@ export function useChat() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to send message');
+        const errorMessage = response.status === 429 
+          ? 'Too many requests. Please wait a moment.'
+          : 'Failed to send message. Click to retry.';
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();

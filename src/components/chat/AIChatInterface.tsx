@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { ChatMessage } from '@/types/chat';
 import { cn } from '@/lib/utils';
 import { AIChatTypingIndicator } from './AIChatTypingIndicator';
+import toast from 'react-hot-toast';
 
 export function AIChatInterface() {
   const [inputMessage, setInputMessage] = useState('');
@@ -37,8 +38,9 @@ export function AIChatInterface() {
     
     try {
       await sendMessage(message);
+      toast.success('Message sent successfully!');
     } catch (error) {
-      console.error('Failed to send message:', error);
+      toast.error('Failed to send message');
     }
   };
 
