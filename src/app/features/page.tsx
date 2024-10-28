@@ -23,7 +23,7 @@ export default function Features() {
             Features & Capabilities
           </h1>
           <p className="text-xl text-zinc-400">
-            Discover how MySpotifyAI transforms your music discovery experience through intelligent features and personalized interactions.
+            Discover how MySpotifAI transforms your music discovery experience through intelligent features and personalized interactions.
           </p>
         </div>
       </section>
@@ -111,7 +111,7 @@ export default function Features() {
       {/* Integration Benefits */}
       <section className="container mx-auto px-6 py-16">
         <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-2xl p-12">
-          <h2 className="text-3xl font-bold mb-8 text-center">Why Choose MySpotifyAI?</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Why Choose MySpotifAI?</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <BenefitCard
               icon={<Headphones className="h-6 w-6 text-green-500" />}

@@ -4,7 +4,7 @@ import "./globals.css";
 import AuthProvider from './providers/AuthProvider';
 
 export const metadata: Metadata = {
-  title: "MySpotifyAI | AI-Powered Music Companion",
+  title: "MySpotifAI | AI-Powered Music Companion",
   description: "Experience music like never before with AI-powered recommendations and emotional analysis.",
   icons: {
     icon: [

@@ -72,7 +72,7 @@ export default function Navigation() {
         <div className="container mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
             <Music className="h-8 w-8 text-[#1DB954]" />
-            <span className="text-xl font-bold text-white">MySpotifyAI</span>
+            <span className="text-xl font-bold text-white">MySpotifAI</span>
           </Link>
           <div className="flex items-center gap-4">
             <p className="text-zinc-400 mr-4">Please log in to continue</p>
@@ -121,7 +121,7 @@ export default function Navigation() {
         <div className="container mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
             <Music className="h-8 w-8 text-[#1DB954]" />
-            <span className="text-xl font-bold text-white">MySpotifyAI</span>
+            <span className="text-xl font-bold text-white">MySpotifAI</span>
           </Link>
 
           {/* Desktop Navigation */}
