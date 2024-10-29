@@ -10,7 +10,7 @@ import {
   Zap,
   Heart
 } from 'lucide-react';
-
+import { SpotlightCard } from '@/components/ui/spotlight-card';
 export default function Features() {
   return (
     <div className="min-h-screen bg-black text-white">
@@ -145,7 +145,7 @@ interface FeatureCardProps {
 
 // Update the FeatureCard component with the interface
 const FeatureCard = ({ icon, title, description, benefits }: FeatureCardProps) => (
-  <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 hover:border-green-500 transition-colors">
+  <SpotlightCard className="bg-zinc-900 p-8">
     <div className="mb-4">
       {icon}
     </div>
@@ -159,7 +159,7 @@ const FeatureCard = ({ icon, title, description, benefits }: FeatureCardProps) =
         </li>
       ))}
     </ul>
-  </div>
+  </SpotlightCard>
 );
 
 // Add interface
@@ -172,7 +172,7 @@ interface AdvancedFeatureProps {
 
 // Update component signature
 const AdvancedFeature = ({ icon, title, description, reasoning }: AdvancedFeatureProps) => (
-  <div className="flex gap-6 p-6 bg-zinc-900 rounded-xl">
+  <SpotlightCard className="flex gap-6 p-6">
     <div className="p-2 bg-zinc-800 rounded-lg h-fit">
       {icon}
     </div>
@@ -181,7 +181,7 @@ const AdvancedFeature = ({ icon, title, description, reasoning }: AdvancedFeatur
       <p className="text-zinc-400 mb-3">{description}</p>
       <p className="text-sm text-zinc-500 italic">{reasoning}</p>
     </div>
-  </div>
+  </SpotlightCard>
 );
 
 // Benefit Card Component

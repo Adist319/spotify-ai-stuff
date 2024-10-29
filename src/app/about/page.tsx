@@ -1,6 +1,7 @@
 import React from 'react';
 import Navigation from '@/components/Navigation';
 import { Music, Code, Cpu, Server, Sparkles, Split } from 'lucide-react';
+import { SpotlightCard } from '@/components/ui/spotlight-card';
 
 interface TechCardProps {
   icon: React.ReactNode;
@@ -117,7 +118,7 @@ export default function About() {
 
 // Tech Stack Card Component
 const TechCard = ({ icon, title, technologies }: TechCardProps) => (
-  <div className="bg-zinc-900 p-6 rounded-xl border border-zinc-800 hover:border-green-500 transition-colors">
+  <SpotlightCard className="border-zinc-800">
     <div className="mb-4">
       {icon}
     </div>
@@ -125,12 +126,12 @@ const TechCard = ({ icon, title, technologies }: TechCardProps) => (
     <ul className="space-y-2">
       {technologies.map((tech, index) => (
         <li key={index} className="text-zinc-400 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+          <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
           {tech}
         </li>
       ))}
     </ul>
-  </div>
+  </SpotlightCard>
 );
 
 // Feature Row Component

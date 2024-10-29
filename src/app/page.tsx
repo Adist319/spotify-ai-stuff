@@ -13,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SpotlightCard } from '@/components/ui/spotlight-card';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -228,9 +229,9 @@ const FeatureCard = ({
   isLoading?: boolean,
   requiresAuth?: boolean
 }) => (
-  <div 
-    className={`relative bg-zinc-900 p-6 rounded-xl border border-zinc-800 transition-all duration-200 h-[180px] flex flex-col ${
-      onClick && !requiresAuth ? 'cursor-pointer hover:bg-zinc-800/50 hover:border-green-500 hover:scale-[1.02]' : 
+  <SpotlightCard
+    className={`h-[180px] flex flex-col ${
+      onClick && !requiresAuth ? 'cursor-pointer hover:scale-[1.02]' : 
       comingSoon || requiresAuth ? 'opacity-75' : ''
     }`}
     onClick={!isLoading && !comingSoon && !requiresAuth ? onClick : undefined}
@@ -255,5 +256,5 @@ const FeatureCard = ({
         <p className="text-zinc-400 text-sm line-clamp-2">{description}</p>
       </>
     )}
-  </div>
+  </SpotlightCard>
 );

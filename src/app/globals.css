@@ -41,6 +41,34 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  .spotlight-effect::before {
+    pointer-events: none;
+  }
+
+  .spotlight-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+
+  .spotlight-card:hover {
+    --tw-border-opacity: 0.5;
+    border-color: rgb(34 197 94 / var(--tw-border-opacity));
+    --tw-bg-opacity: 0.5;
+    background-color: rgb(39 39 42 / var(--tw-bg-opacity));
+  }
+
+  .spotlight-card:focus-visible {
+    outline: none;
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+    --tw-ring-color: rgb(34 197 94);
+  }
 }
 
 @layer base {
