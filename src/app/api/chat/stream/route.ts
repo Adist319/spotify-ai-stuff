@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { anthropic } from '@/lib/claude';
 import { getToken } from 'next-auth/jwt';
+import { db } from '@/lib/db';
+import { recommendations } from '@/app/db/schema';
+import { parseClaudeRecommendations } from '@/lib/aiRecommendations';
 
 export async function POST(req: NextRequest) {
   try {
@@ -64,6 +67,56 @@ Always provide detailed, engaging responses that demonstrate your music knowledg
     const content = response.content[0].type === 'text'
       ? response.content[0].text
       : '';
+
+    // Parse recommendations from the response
+    const parsedRecommendations = parseClaudeRecommendations(content);
+    console.log('Parsed recommendations length:', parsedRecommendations.length);
+
+    // Store recommendations in the database if any were found
+    if (parsedRecommendations.length > 0) {
+      try {
+        const results = await Promise.all(parsedRecommendations.map(async (rec) => {
+          if (!rec.track) {
+            console.warn('Skipping recommendation with missing track data');
+            return null;
+          }
+          
+          try {
+            const result = await db.insert(recommendations).values({
+              user_id: token.sub as string,
+              track_id: rec.id || '',
+              track_name: rec.track.name,
+              artist_name: rec.track.artists[0].name,
+              reason: rec.reason || '',
+              mood: rec.mood || null,
+              context: rec.context || null,
+              created_at: new Date(),
+            }).returning();
+
+            console.log('Successfully inserted recommendation:', {
+              track: rec.track.name,
+              artist: rec.track.artists[0].name,
+              result
+            });
+
+            return result;
+          } catch (error) {
+            console.error('Failed to insert recommendation:', {
+              track: rec.track.name,
+              artist: rec.track.artists[0].name,
+              error
+            });
+            return null;
+          }
+        }));
+
+        const successfulInserts = results.filter(r => r !== null);
+        console.log(`Successfully inserted ${successfulInserts.length} of ${parsedRecommendations.length} recommendations`);
+
+      } catch (error) {
+        console.error('Database operation failed:', error);
+      }
+    }
 
     return NextResponse.json({ content });
 
