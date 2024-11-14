@@ -97,20 +97,26 @@ export default function Home() {
               </TooltipContent>
             </Tooltip>
 
-            {/* Mood Analysis - Coming Soon */}
+            {/* Mood Mixer - Links to mood-mixer */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <div>
                   <FeatureCard 
                     icon={<Brain className="h-8 w-8 text-green-500" />}
-                    title="Mood Analysis"
-                    description="Discover music that matches your current mood using our emotional intelligence engine."
-                    comingSoon
+                    title="Mood Mixer"
+                    description="Create personalized playlists based on your mood using our emotional intelligence engine."
+                    onClick={() => handleNavigation('/mood-mixer')}
+                    isLoading={navigating === '/mood-mixer'}
+                    requiresAuth={!session}
                   />
                 </div>
               </TooltipTrigger>
               <TooltipContent className="max-w-[300px]">
-                <p>Coming soon!</p>
+                {!session ? (
+                  <p>Login required to access this feature</p>
+                ) : (
+                  <p>Create personalized playlists based on your mood using our emotional intelligence engine.</p>
+                )}
               </TooltipContent>
             </Tooltip>
 
