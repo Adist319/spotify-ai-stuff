@@ -44,7 +44,6 @@ export function AIMoodInput({ onFeaturesGenerated, onSuggestionsReceived }: AIMo
         contextualNotes: data.contextualNotes,
       });
       
-      setInput('');
     } catch (error) {
       console.error('Error analyzing mood:', error);
     } finally {

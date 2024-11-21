@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import { MoodWheel } from '@/components/mood/MoodWheel';
 import { FeatureSlider } from '@/components/mood/FeatureSlider';
 import { AIMoodInput } from '@/components/mood/AIMoodInput';
@@ -22,6 +23,28 @@ import { useSpotify } from '@/hooks/useSpotify';
 import Navigation from '@/components/Navigation';
 import { SpotlightCard } from '@/components/ui/spotlight-card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { PlaylistResult } from '@/components/mood/PlaylistResult';
+import { useToast } from "@/hooks/use-toast";
+
+interface SpotifyTrack {
+  id: string;
+  name: string;
+  artists: { name: string }[];
+  album: {
+    name: string;
+    images: { url: string }[];
+  };
+  external_urls: {
+    spotify: string;
+  };
+  moodContribution?: string;
+}
+
+interface PlaylistResponse {
+  playlistId: string;
+  playlistUrl: string;
+  tracks: SpotifyTrack[];
+}
 
 export default function MoodMixerPage() {
   const [selectedPreset, setSelectedPreset] = useState<MoodPreset>();
@@ -39,11 +62,15 @@ export default function MoodMixerPage() {
     contextualNotes: string;
   }>();
   const [isGenerating, setIsGenerating] = useState(false);
-  const { isReady, error, isLoading, userData } = useSpotify();
+  const [generatedPlaylist, setGeneratedPlaylist] = useState<PlaylistResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+  const { isReady, isLoading, userData } = useSpotify();
 
   const handlePresetSelect = (preset: MoodPreset) => {
     setSelectedPreset(preset);
     setFeatures(preset.features);
+    setAiSuggestions(undefined); // Clear AI suggestions when preset is selected
   };
 
   const handleFeatureChange = (feature: keyof AudioFeatures, value: number) => {
@@ -62,16 +89,14 @@ export default function MoodMixerPage() {
     contextualNotes: string;
   }) => {
     setAiSuggestions(suggestions);
+    setSelectedPreset(undefined); // Clear preset when AI suggestions are received
   };
 
   const generatePlaylist = async () => {
-    if (!isReady) {
-      console.error('Spotify session not ready');
-      return;
-    }
-    
-    setIsGenerating(true);
     try {
+      setIsGenerating(true);
+      setError(null);
+
       const response = await fetch('/api/mood/generate', {
         method: 'POST',
         headers: {
@@ -84,14 +109,30 @@ export default function MoodMixerPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate playlist');
+        const errorData = await response.json();
+        if (response.status === 401 || (errorData.error && errorData.error.includes('Token expired'))) {
+          // Token expired, refresh the session
+          await signIn('spotify');
+          return;
+        }
+        throw new Error(errorData.error || 'Failed to generate playlist');
       }
 
       const data = await response.json();
-      // Handle the generated playlist...
-      
+      setGeneratedPlaylist(data);
+      toast({
+        title: "Success!",
+        description: "Your playlist has been generated successfully.",
+      });
     } catch (error) {
       console.error('Error generating playlist:', error);
+      const errorMessage = (error as Error).message || 'Failed to generate playlist';
+      setError(errorMessage);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: errorMessage,
+      });
     } finally {
       setIsGenerating(false);
     }
@@ -125,7 +166,7 @@ export default function MoodMixerPage() {
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>
-              {error.message}
+              {error}
             </AlertDescription>
           </Alert>
         )}
@@ -236,17 +277,43 @@ export default function MoodMixerPage() {
                 </Button>
                 <Button
                   onClick={generatePlaylist}
-                  disabled={isGenerating || !isReady || isLoading}
+                  disabled={!isReady || isGenerating || !aiSuggestions}
                   className="flex-1 h-12 bg-green-500 hover:bg-green-400 text-black font-medium disabled:bg-green-500/50"
                 >
-                  <PlayCircle className="h-4 w-4 mr-2" />
-                  {isGenerating ? 'Generating...' : 'Generate Playlist'}
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Music2 className="mr-2 h-4 w-4" />
+                      {!isReady
+                        ? 'Login Required'
+                        : !aiSuggestions
+                        ? 'Describe Your Mood First'
+                        : 'Generate Playlist'}
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
           </SpotlightCard>
         )}
       </section>
+
+      {/* Playlist Result */}
+      {generatedPlaylist && (
+        <div className="mt-8">
+          <PlaylistResult
+            playlistId={generatedPlaylist.playlistId}
+            tracks={generatedPlaylist.tracks}
+            moodDescription={aiSuggestions?.moodDescription}
+            contextualNotes={aiSuggestions?.contextualNotes}
+            onClose={() => setGeneratedPlaylist(null)}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -7,18 +7,7 @@ export const metadata: Metadata = {
   title: "MySpotifAI | AI-Powered Music Companion",
   description: "Experience music like never before with AI-powered recommendations and emotional analysis.",
   icons: {
-    icon: [
-      {
-        url: "/favicon.ico",
-        sizes: "any",
-      },
-    ],
-    apple: [
-      {
-        url: "/apple-touch-icon.png",
-        sizes: "180x180",
-      },
-    ],
+    icon: '/favicon.ico',
   },
 };
 
