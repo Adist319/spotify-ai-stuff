@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "pre-deploy": "npm run type-check && npm run build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.1",

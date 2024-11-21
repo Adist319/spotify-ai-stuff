@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     // Get user's top tracks as seed tracks
     const topTracksResponse = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=5', {
       headers: {
-        Authorization: `Bearer ${session.accessToken}`,
+        Authorization: `Bearer ${(session.user as any).accessToken}`,
       },
     });
 
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       `https://api.spotify.com/v1/recommendations?${params.toString()}`,
       {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${(session.user as any).accessToken}`,
         },
       }
     );
@@ -74,11 +74,11 @@ export async function POST(req: Request) {
 
     // Create a new playlist
     const createPlaylistResponse = await fetch(
-      `https://api.spotify.com/v1/users/${session.user.id}/playlists`,
+      `https://api.spotify.com/v1/users/${(session.user as any).id}/playlists`,
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${(session.user as any).accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${(session.user as any).accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
