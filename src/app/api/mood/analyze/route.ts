@@ -39,7 +39,7 @@ Format your response as JSON with these exact keys:
       }],
     });
 
-    const response = message.content[0].text;
+    const response = message.content[0].type === 'text' ? message.content[0].text : '';
     const data = JSON.parse(response);
 
     return NextResponse.json(data);
