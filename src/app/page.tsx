@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sparkles, MessageCircle, Brain, ArrowRight, Heart, Clock, ExternalLink, Trophy } from 'lucide-react';
+import { Sparkles, MessageCircle, Brain, ArrowRight, Heart, Clock, ExternalLink, Trophy, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import { useSession } from 'next-auth/react';
@@ -57,20 +57,26 @@ export default function Home() {
       <TooltipProvider>
         <section className="container mx-auto px-6 py-16">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
-            {/* Smart Playlists - Coming Soon */}
+            {/* Artist Deep Dive */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <div>
                   <FeatureCard 
-                    icon={<Sparkles className="h-8 w-8 text-green-500" />}
-                    title="Smart Playlists"
-                    description="Create AI-curated playlists based on your mood, activity, or musical taste."
-                    comingSoon
+                    icon={<Users className="h-8 w-8 text-green-500" />}
+                    title="Artist Deep Dive"
+                    description="Explore your favorite artists with detailed insights, statistics, and musical analysis."
+                    onClick={() => handleNavigation('/artists')}
+                    isLoading={navigating === '/artists'}
+                    requiresAuth={!session}
                   />
                 </div>
               </TooltipTrigger>
               <TooltipContent className="max-w-[300px]">
-                <p>Coming soon!</p>
+                {!session ? (
+                  <p>Login required to access this feature</p>
+                ) : (
+                  <p>Discover in-depth insights about your favorite artists, including their musical style, discography, and more.</p>
+                )}
               </TooltipContent>
             </Tooltip>
 
